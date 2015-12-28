@@ -2,8 +2,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.SparkConf;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,11 +13,14 @@ public class Main {
         SparkConf conf = new SparkConf().setAppName("sandbox").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
-        JavaRDD<Integer> distData = sc.parallelize(data);
+        List<Integer> numbers = IntStream.range(0, 1000000).boxed().collect(Collectors.toList());
 
-        int count = distData.reduce((a, b) -> a + b);
+        JavaRDD<Integer> distData = sc.parallelize(numbers);
 
-        System.out.println(String.format("Count: %d", count));
+        long startTime = System.currentTimeMillis();
+        long count = distData.reduce((a, b) -> a + b);
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(String.format("Count: %d; Time: %d ms", count, endTime - startTime));
     }
 }
