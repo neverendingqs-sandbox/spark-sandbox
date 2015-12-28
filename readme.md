@@ -1,0 +1,1 @@
+A collection of code snippets while exploring Apache Spark functionality.
