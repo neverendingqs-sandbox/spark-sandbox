@@ -12,6 +12,7 @@ public class Main {
         JavaSparkContext sc = new JavaSparkContext(conf);
 
         SumListOfNumbers(sc);
+        NasaHttpLogs(sc);
     }
 
     /*
@@ -35,5 +36,10 @@ public class Main {
                         expectedSum == actualSum
                 )
         );
+    }
+
+    private static void NasaHttpLogs(JavaSparkContext sc) {
+        JavaRDD<String> logs = sc.textFile(".data/access_log_Jul95");
+        System.out.println(String.format("Count: %d", logs.count()));
     }
 }
